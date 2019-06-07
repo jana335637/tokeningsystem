@@ -17,16 +17,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(Long id, Customer customer) {
-       return CustomerStub.update(id,customer);
+        return CustomerStub.update(id, customer);
     }
 
     @Override
-    public Customer  createCustomer(Customer customer) {
+    public Customer createCustomer(Customer customer) {
         return CustomerStub.create(customer);
     }
 
     @Override
-    public Customer  deleteCustomer(Long id) {
+    public Customer deleteCustomer(Long id) {
         return CustomerStub.delete(id);
     }
 
@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public PriorityType getCustomerServiceTypeById(Long id) {
-        if(CustomerStub.get(id)!=null)
+        if (CustomerStub.get(id) != null)
             return CustomerStub.get(id).getPriorityType();
         return null;
     }

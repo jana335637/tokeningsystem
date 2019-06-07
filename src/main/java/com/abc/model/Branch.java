@@ -1,5 +1,8 @@
 package com.abc.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Branch {
     private String branchId;
     private String numberOfCounters;

@@ -1,64 +1,77 @@
-/*
 package com.abc.util;
 
-import com.abc.model.Customer;
-import com.abc.model.Token;
+import com.abc.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class TokenStub {
-    private static Map<Long, Customer> tokens = new HashMap<>();
+    private static Map<Long, Token> tokens = new HashMap<>();
     private static Long idIndex = 0L;
 
-    //populate initial customers list
+    static List<CounterQueue> counters = new ArrayList<>();
+
+    @Autowired
+    static PremiumQueue premiumQueue;
+
+    @Autowired
+    static RegularQueue regularQueue;
+
+    //populate initial tokens list
     static {
-        Token t1  = new Token(++idIndex,CustomerStub.get(1l).getPriorityType(),Status.OPEN,1l);
-        customers.put(idIndex,c1);
-        Customer c2  = new Customer(++idIndex, "Raj", "Hyd", PriorityType.REGULAR, "B1");
-        customers.put(idIndex,c2);
-        Customer c3  = new Customer(++idIndex, "R1", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c3);
-        Customer c4  = new Customer(++idIndex, "J2", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c4);
-        Customer c5  = new Customer(++idIndex, "Mahesh", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c5);
-        Customer c6  = new Customer(++idIndex, "Rajan", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c6);
-        Customer c7  = new Customer(++idIndex, "Judo", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c7);
-        Customer c8  = new Customer(++idIndex, "Bidessy", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c8);
-        Customer c9  = new Customer(++idIndex, "Emily", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c9);
-        Customer c10  = new Customer(++idIndex, "Elora", "Hyd", PriorityType.PREMIUM, "B1");
-        customers.put(idIndex,c10);
+
+        CounterQueue c1 = new CounterQueue("c1", "Sophia");
+        CounterQueue c2 = new CounterQueue("c2", "Surya");
+        CounterQueue c3 = new CounterQueue("c3", "Sandy");
+
+        counters.add(c1);
+        counters.add(c2);
+        counters.add(c3);
+        mapQueues(counters);
+
+
     }
 
-    public static List<Customer> list() {
-        return new ArrayList<>(customers.values());
+    private static void mapQueues(List<CounterQueue> counters) {
+        List<Customer> customers = CustomerStub.list();
+
+        PremiumQueue premiumQueue = PremiumQueue.getPremiumQueue();
+        RegularQueue regularQueue = RegularQueue.getRegularQueue();
+        for (Customer customer : customers) {
+            tokens.put(++idIndex, new Token(idIndex, customer.getPriorityType(), Status.OPEN, customer.getCustId()));
+            TokenUtils.assignTokenToQueue(tokens.get(idIndex),counters);
+        }
     }
 
-    public static Customer create(Customer customer) {
-        customer.setCustId(++   idIndex);
-        customers.put(idIndex, customer);
-        return customer;
+    public static List<CounterQueue> getQueues() {
+        return counters;
+    }
+    public static Map<Long, Token> getTokens() {
+        return tokens;
     }
 
-    public static Customer get(Long id) {
-        return customers.get(id);
+    public static Token create(Token token) {
+        token.setId(++idIndex);
+        tokens.put(idIndex, token);
+        return token;
     }
 
-    public static Customer update(Long id, Customer customer) {
-        customers.put(id, customer);
-        return customer;
+    public static Token get(Long id) {
+        return tokens.get(id);
     }
 
-    public static Customer delete(Long id) {
-        return customers.remove(id);
+    public static Token update(Long id, Token token) {
+        tokens.put(id, token);
+        return token;
+    }
+
+    public static Token delete(Long id) {
+        return tokens.remove(id);
     }
 
 }
-*/

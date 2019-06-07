@@ -1,6 +1,7 @@
 package com.abc.model;
 
 import com.abc.util.PriorityType;
+import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 

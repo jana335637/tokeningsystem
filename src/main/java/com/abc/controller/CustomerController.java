@@ -1,6 +1,7 @@
 package com.abc.controller;
 
 import com.abc.model.Customer;
+import com.abc.model.PremiumQueue;
 import com.abc.service.CustomerService;
 import com.abc.util.PriorityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/abc/customers")
+@RequestMapping("/abc")
 public class CustomerController {
 
     @Autowired
     CustomerService customerService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value= "/customers", method = RequestMethod.GET)
     public ResponseEntity list() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomers());
@@ -25,7 +26,7 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/customers/{id}", method = RequestMethod.GET)
     public ResponseEntity get(@PathVariable Long id) {
         try {
             Customer customer = customerService.getCustomerById(id);
@@ -38,7 +39,7 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "/{id}/Type", method = RequestMethod.GET)
+    @RequestMapping(value = "/customers/{id}/Type", method = RequestMethod.GET)
     public ResponseEntity getCustomerPriorityType(@PathVariable Long id) {
         try {
             PriorityType priorityType = customerService.getCustomerServiceTypeById(id);
@@ -51,7 +52,7 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "/customer", method = RequestMethod.POST)
     public ResponseEntity create(@RequestBody Customer customer) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(customer));
@@ -60,7 +61,7 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/customers/{id}", method = RequestMethod.PUT)
     public ResponseEntity get(@PathVariable Long id, @RequestBody Customer customer) {
         try {
             Customer updatedCustomer = customerService.updateCustomer(id, customer);
@@ -73,7 +74,7 @@ public class CustomerController {
         }
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/customers/{id}", method = RequestMethod.DELETE)
     public ResponseEntity delete(@PathVariable Long id) {
         try {
             Customer customer = customerService.deleteCustomer(id);
@@ -85,5 +86,4 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
         }
     }
-
 }

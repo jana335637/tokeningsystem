@@ -1,20 +1,22 @@
 package com.abc;
 
-import static org.junit.Assert.assertTrue;
-
+import com.abc.controller.CustomerController;
+import com.abc.model.Customer;
+import com.abc.util.PriorityType;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
- * Unit test for simple App.
+ * Unit tests for tokening system.
  */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
+public class AppTest {
+
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void testApp() {
+        CustomerController cc = new CustomerController();
+        cc.get(1l);
+        assertNotNull(cc.get(1l));
+        //assertEquals(((Customer)(cc.get(1l)).getBody()).getPriorityType(), PriorityType.REGULAR);
     }
 }
