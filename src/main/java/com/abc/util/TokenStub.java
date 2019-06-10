@@ -1,7 +1,6 @@
 package com.abc.util;
 
 import com.abc.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,12 +14,6 @@ public class TokenStub {
     private static Long idIndex = 0L;
 
     static List<CounterQueue> counters = new ArrayList<>();
-
-    @Autowired
-    static PremiumQueue premiumQueue;
-
-    @Autowired
-    static RegularQueue regularQueue;
 
     //populate initial tokens list
     static {
@@ -44,13 +37,14 @@ public class TokenStub {
         RegularQueue regularQueue = RegularQueue.getRegularQueue();
         for (Customer customer : customers) {
             tokens.put(++idIndex, new Token(idIndex, customer.getPriorityType(), Status.OPEN, customer.getCustId()));
-            TokenUtils.assignTokenToQueue(tokens.get(idIndex),counters);
+            TokenUtils.assignTokenToQueue(tokens.get(idIndex), counters);
         }
     }
 
     public static List<CounterQueue> getQueues() {
         return counters;
     }
+
     public static Map<Long, Token> getTokens() {
         return tokens;
     }
@@ -74,4 +68,7 @@ public class TokenStub {
         return tokens.remove(id);
     }
 
+    public static Map<Long, Token> getAllTokens() {
+        return tokens;
+    }
 }

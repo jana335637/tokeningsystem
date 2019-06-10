@@ -1,7 +1,6 @@
 package com.abc.model;
 
 import com.abc.util.PriorityType;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
@@ -12,7 +11,8 @@ public class Customer {
     private PriorityType priorityType;
     private String branchId;
 
-    public Customer(){}
+    public Customer() {
+    }
 
     public Customer(Long custId, String name, String address, PriorityType priorityType, String branchId) {
         this.custId = custId;
@@ -21,6 +21,7 @@ public class Customer {
         this.priorityType = priorityType;
         this.branchId = branchId;
     }
+
     public Long getCustId() {
         return custId;
     }

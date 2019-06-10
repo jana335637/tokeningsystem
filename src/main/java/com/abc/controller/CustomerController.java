@@ -1,7 +1,6 @@
 package com.abc.controller;
 
 import com.abc.model.Customer;
-import com.abc.model.PremiumQueue;
 import com.abc.service.CustomerService;
 import com.abc.util.PriorityType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    @RequestMapping(value= "/customers", method = RequestMethod.GET)
+    @RequestMapping(value = "/customers", method = RequestMethod.GET)
     public ResponseEntity list() {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(customerService.getCustomers());

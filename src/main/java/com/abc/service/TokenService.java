@@ -19,4 +19,8 @@ public interface TokenService {
     Token getTokenById(Long id);
 
     PriorityType getTokenPriorityType(Long id);
+
+    List<Token> getUnassignedTokens();
+
+    Map<Long, Token> getAllTokens();
 }

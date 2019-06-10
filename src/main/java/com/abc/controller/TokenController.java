@@ -1,8 +1,6 @@
 package com.abc.controller;
 
 import com.abc.model.Customer;
-import com.abc.model.PremiumQueue;
-import com.abc.model.RegularQueue;
 import com.abc.model.Token;
 import com.abc.service.TokenService;
 import com.abc.util.*;
@@ -11,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/abc")
@@ -33,18 +28,9 @@ public class TokenController {
     }
 
     @RequestMapping(value = "/queue/tokens", method = RequestMethod.GET)
-    public ResponseEntity getTokensUnassigned() {
+    public ResponseEntity getUnassignedTokens() {
         try {
-            PremiumQueue premiumQueue = PremiumQueue.getPremiumQueue();
-            RegularQueue regularQueue = RegularQueue.getRegularQueue();
-            List<Token> tokens = new ArrayList<>();
-            for (int i = 0; i < premiumQueue.size(); i++) {
-                tokens.add((Token) premiumQueue.get(i));
-            }
-            for (int i = 0; i < regularQueue.size(); i++) {
-                tokens.add((Token) regularQueue.get(i));
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(tokens);
+            return ResponseEntity.status(HttpStatus.OK).body(tokenService.getUnassignedTokens());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
         }
@@ -90,14 +76,14 @@ public class TokenController {
     }
 
     @RequestMapping(value = "/tokens/{id}", method = RequestMethod.PUT)
-    public ResponseEntity get(@PathVariable Long id, @RequestBody Token token) {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody Token token) {
         try {
 
-            if(TokenStub.getTokens().get(token.getId())==null)
+            if (tokenService.getAllTokens().get(token.getId()) == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token not found with id:" + id);
 
-            if(!TokenUtils.isValidTokenToServe(TokenStub.getQueues(),token)){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token with id:" + id+" is not valid one to serve");
+            if (!TokenUtils.isValidTokenToServe(TokenStub.getQueues(), token)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token with id:" + id + " is not valid one to serve");
             }
 
             //Checking the status has valid value or not. If not giving Bad request response back

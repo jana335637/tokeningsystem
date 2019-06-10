@@ -1,5 +1,6 @@
 package com.abc.service;
 
+import com.abc.dao.TokenDAO;
 import com.abc.model.CounterQueue;
 import com.abc.model.PremiumQueue;
 import com.abc.model.RegularQueue;
@@ -8,6 +9,7 @@ import com.abc.util.PriorityType;
 import com.abc.util.Status;
 import com.abc.util.TokenStub;
 import com.abc.util.TokenUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,12 +20,14 @@ import java.util.Map;
 @Service
 public class TokenServiceImpl implements TokenService {
 
+    @Autowired
+    TokenDAO tokenDAO;
 
     @Override
     public Map<String, List<String>> list() {
 
         //Preparing tokens which are there counter wise
-        List<CounterQueue> counters = TokenStub.getQueues();
+        List<CounterQueue> counters = tokenDAO.getQueues();
         Map<String, List<String>> tokens = new HashMap<>();
         String prefix;
         for (CounterQueue counterQueue : counters) {
@@ -46,19 +50,17 @@ public class TokenServiceImpl implements TokenService {
         PremiumQueue premiumQueue = PremiumQueue.getPremiumQueue();
         RegularQueue regularQueue = RegularQueue.getRegularQueue();
 
-        Map<Long, Token> tokensMap = TokenStub.getTokens();
-        if (token.getStatus().equals(Status.OPEN)) {
-            return TokenStub.update(id, token);
-        } else {
+        tokenDAO.update(id, token);
+        if (!(token.getStatus().equals(Status.OPEN))) {
+            TokenUtils.dequeToken(token, tokenDAO.getQueues());
             if (token.getStatus().equals(Status.FORWARDED)) {
-                TokenUtils.assignTokenToQueue(token,TokenStub.getQueues());
-            }
-            TokenUtils.dequeToken(token,TokenStub.getQueues());
-            if(!premiumQueue.isEmpty()){
-                TokenUtils.assignTokenToQueue((Token)premiumQueue.poll(),TokenStub.getQueues());
-            }
-            else if(!regularQueue.isEmpty()){
-                TokenUtils.assignTokenToQueue((Token)regularQueue.poll(),TokenStub.getQueues());
+                TokenUtils.forwardToken(token, tokenDAO.getQueues());
+            } else {
+                if (!premiumQueue.isEmpty()) {
+                    TokenUtils.assignTokenToQueue((Token) premiumQueue.poll(), tokenDAO.getQueues());
+                } else if (!regularQueue.isEmpty()) {
+                    TokenUtils.assignTokenToQueue((Token) regularQueue.poll(), tokenDAO.getQueues());
+                }
             }
         }
         return token;
@@ -66,25 +68,44 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public Token createToken(Token token) {
-        Token createdToken = TokenStub.create(token);
+        Token createdToken = tokenDAO.create(token);
 
-        TokenUtils.assignTokenToQueue(createdToken,TokenStub.getQueues());
+        TokenUtils.assignTokenToQueue(createdToken, tokenDAO.getQueues());
 
         return createdToken;
     }
 
     @Override
     public Token deleteToken(Long id) {
-        return TokenStub.delete(id);
+        return tokenDAO.delete(id);
     }
 
     @Override
     public Token getTokenById(Long id) {
-        return TokenStub.get(id);
+        return tokenDAO.get(id);
     }
 
     @Override
     public PriorityType getTokenPriorityType(Long id) {
-        return TokenStub.get(id).getPriority();
+        return tokenDAO.get(id).getPriority();
+    }
+
+    @Override
+    public List<Token> getUnassignedTokens() {
+        PremiumQueue premiumQueue = PremiumQueue.getPremiumQueue();
+        RegularQueue regularQueue = RegularQueue.getRegularQueue();
+        List<Token> tokens = new ArrayList<>();
+        for (int i = 0; i < premiumQueue.size(); i++) {
+            tokens.add((Token) premiumQueue.get(i));
+        }
+        for (int i = 0; i < regularQueue.size(); i++) {
+            tokens.add((Token) regularQueue.get(i));
+        }
+        return tokens;
+    }
+
+    @Override
+    public Map<Long, Token> getAllTokens() {
+        return TokenStub.getAllTokens();
     }
 }

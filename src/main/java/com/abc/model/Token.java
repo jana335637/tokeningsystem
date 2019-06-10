@@ -16,7 +16,8 @@ public class Token {
     private String comments;
     private String operator;
 
-    public Token(){}
+    public Token() {
+    }
 
     public Token(Long id, PriorityType priority, Status status, Long custId) {
         this.id = id;
@@ -96,6 +97,7 @@ public class Token {
     public void setId(Long id) {
         this.id = id;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

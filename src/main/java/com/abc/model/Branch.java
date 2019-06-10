@@ -8,7 +8,8 @@ public class Branch {
     private String numberOfCounters;
     private String phoneNumber;
 
-    public Branch(){}
+    public Branch() {
+    }
 
     public String getBranchId() {
         return branchId;
