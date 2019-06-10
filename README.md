@@ -62,3 +62,6 @@ DELETE: http://localhost:8080/abc/customers/{custId} - Deletes given customer.
 
 * Junit test cases using Mockito library are added and Integration test is added to check whether a token assigned to counter after serving a token at counter is checked.
 
+### Postman collection link to test API:
+
+https://www.getpostman.com/collections/aa8ea1cb617f96c67e23
