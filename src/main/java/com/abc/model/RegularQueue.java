@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 
 @Component
-@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class RegularQueue<Token> extends LinkedList<Token> {
     private static RegularQueue regularQueue = new RegularQueue();
 
